@@ -2,83 +2,75 @@
 import BoxComponent from "@/components/promptBox";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "animate.css";
+import api from "@/utils/api";
+import { Category, getCategoryFrontInfo } from "./mocksContent";
 
 export default function chatOptions() {
-  const [firstButtonIsOn, setFirstButtonIsOn] = useState(false);
-  const [secondButtonIsOn, setSecondButtonIsOn] = useState(false);
+  const router = useRouter();
+  const [selectedIndex, setSelectedIndex] = useState<null | number>(null);
+  const [categoriesList, setCategoriesList] = useState<Category[]>([]);
 
-  const eitherButtonIsOn = useMemo(() => {
-    return firstButtonIsOn || secondButtonIsOn;
-  }, [firstButtonIsOn, secondButtonIsOn]);
+  useEffect(() => {
+    getCategories();
+  }, []);
 
-  function changeSelectedButton(sender: "first" | "second") {
-    if (sender === "first") {
-      setFirstButtonIsOn((prev) => !prev);
-      setSecondButtonIsOn(false);
-    } else if (sender === "second") {
-      setSecondButtonIsOn((prev) => !prev);
-      setFirstButtonIsOn(false);
-    }
+  async function getCategories() {
+    const response = await api.get("/category");
+    setCategoriesList(
+      response.data.map(
+        (category: {
+          name: string;
+          description: string;
+          prompts: string[];
+        }) => ({
+          ...category,
+          ...getCategoryFrontInfo(category.name),
+        }),
+      ),
+    );
   }
 
-  const router = useRouter();
-
   return (
-    <div className="w-full h-full flex flex-col justify-center text-center items-center">
-      <div className="flex flex-col gap-4 p-4 ">
-        <h1 className="text-3xl font-bold text-center animate__fadeIn animate__animated animate__delay-1s">Selecione uma opção</h1>
+    <div className="w-full h-full flex flex-col gap-4 overflow-y-auto overflow-x-hidden px-4 mb-4">
+      <h1 className="text-3xl font-bold text-center animate__fadeIn animate__animated animate__delay-1s mt-6">
+        Selecione uma opção
+      </h1>
+      {categoriesList.map((category, index) => (
         <Button
-          className="w-full h-full active:bg-transparent hover:bg-transparent animate__animated animate__slideInRight animate__delay-1s"
+          key={index}
+          className={`w-80%  h-20 active:bg-transparent hover:bg-transparent animate__animated animate__delay-1s p-0 ${
+            index % 2 === 0 ? "animate__slideInLeft" : "animate__slideInRight"
+          }`}
           variant={"ghost"}
-          onClick={() => changeSelectedButton("first")}
-        >
-          <BoxComponent
-            description="Chuva chuaaaaaaa"
-            icon="⛈️"
-            iconBgColor="#C5D8FD"
-            isSelected={firstButtonIsOn}
-            title="Chuvas fortes"
-            className="w-full h-full"
-          />
-        </Button>
-
-        <Button
-          className="w-full h-full active:bg-transparent hover:bg-transparent animate__animated animate__slideInLeft animate__delay-1s"
-          variant={"ghost"}
-          onClick={() => changeSelectedButton("second")}
+          onClick={() =>
+            index === selectedIndex
+              ? setSelectedIndex(null)
+              : setSelectedIndex(index)
+          }
         >
           <BoxComponent
             className="w-full h-full"
-            icon={"🔥"}
-            title={"Incêndios"}
-            description={"Fogo ai ai ui ui"}
-            isSelected={secondButtonIsOn}
-            iconBgColor={"#FBFCB9"}
+            icon={category.emoji}
+            title={category.exibitionName}
+            description={category.description}
+            isSelected={selectedIndex === index}
+            iconBgColor={category.color}
           />
         </Button>
-
-        {eitherButtonIsOn && (
-          <Button
-            className="bg-primaryGreen hover:bg-primaryGreen active:bg-primaryDarkGreen hover:text-white active:text-white text-white mt-6 mx-4 animate__fadeIn animate__animated"
-            variant={"ghost"}
-            onClick={() => router.push('chatbot')}
-          >
-            CONFIRMAR
-          </Button>
-        )}
-
-{!eitherButtonIsOn && (
-        <Button
-          className="bg-primaryGray hover:bg-primaryGray active:bg-primaryDarkGray hover:text-white active:text-white text-white mt-8 mx-4 animate__fadeIn animate__animated"
-          variant={"ghost"}
-          onClick={() => router.push('chatbot')}
-        >
-          PULAR
-        </Button>
-)}
-      </div>
+      ))}
+      <Button
+        className={`text-white mt-2 mx-4 animate__fadeIn animate__animated ${
+          selectedIndex === null
+            ? "bg-primaryGray hover:bg-primaryGray active:bg-primaryDarkGray"
+            : "bg-primaryGreen hover:bg-primaryGreen active:bg-primaryDarkGreen"
+        }`}
+        variant={"ghost"}
+        onClick={() => router.push("chatbot")}
+      >
+        {selectedIndex === null ? "PULAR" : "CONFIRMAR"}
+      </Button>
     </div>
   );
 }

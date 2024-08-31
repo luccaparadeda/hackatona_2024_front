@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface BoxComponentProps {
   icon: string;
@@ -9,12 +9,19 @@ interface BoxComponentProps {
   className?: string;
 }
 
-const BoxComponent: React.FC<BoxComponentProps> = ({ icon, title, description, isSelected, iconBgColor, className }) => {
+const BoxComponent: React.FC<BoxComponentProps> = ({
+  icon,
+  title,
+  description,
+  isSelected,
+  iconBgColor,
+  className,
+}) => {
   return (
-    <div className={className}> 
+    <div className={className}>
       <div
         className={`flex items-center p-4 border rounded-lg transition-colors duration-300 ${
-          isSelected ? 'bg-white border-green-300 border-2' : 'bg-white border-gray-300'
+          isSelected ? "bg-white border-green-300" : "bg-white border-gray-300"
         }`}
       >
         <div
@@ -23,10 +30,12 @@ const BoxComponent: React.FC<BoxComponentProps> = ({ icon, title, description, i
         >
           <span className="text-xl">{icon}</span>
         </div>
-        
-        <div className="ml-4">
+
+        <div className="ml-4 overflow-hidden">
           <h3 className="text-sm font-semibold">{title}</h3>
-          <p className="mt-2 text-xs font-light text-gray-700">{description}</p>
+          <p className="mt-2 text-xs font-light text-gray-700 truncate">
+            {description}
+          </p>
         </div>
       </div>
     </div>
