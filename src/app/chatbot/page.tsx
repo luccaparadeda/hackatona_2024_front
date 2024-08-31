@@ -31,7 +31,7 @@ export default function Chatbot() {
 
   return (
     <div className="flex flex-col gap-4 h-full relative overflow-scroll">
-      <div className="p-2 flex flex-col gap-1">
+      <div className="p-2 flex flex-col gap-1 mb-32">
         {chatMessagesMock.map((message, i) => (
           <ChatBox key={i} fromUser={message.fromUser}>
             <div className="text-justify">{message.text}</div>
