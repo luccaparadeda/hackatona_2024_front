@@ -21,6 +21,13 @@ const config: Config = {
       },
       colors: {
         primaryGreen: "#00B140",
+        primaryGray: "#38403D",
+        secondaryGreen: "#52CA7D",
+        chatGreen: "#D3F9C5",
+        chatTextGreen: "#27B469",
+        chatTextGray:"#F0F0F0",
+        textGray: "#C7C7C7",
+        textGreen: "#56CB80",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
