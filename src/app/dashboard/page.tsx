@@ -36,7 +36,7 @@ export default function Dashboard() {
           <div className="text-sm">Admin</div>
         </DropdownContextMenu>
       </div>
-      <div className="shadow-lg rounded-3xl p-8 flex flex-col gap-12">
+      <div className="shadow-lg rounded-3xl p-8 flex flex-col gap-4">
         <div>
           <div className="font-semibold text-lg">Categorias</div>
           <div className="text-gray-500 font-medium">
@@ -55,7 +55,7 @@ export default function Dashboard() {
           ))}
         </div>
       </div>
-      <div className="shadow-lg rounded-3xl p-8 flex flex-col gap-4">
+      <div className="shadow-lg rounded-3xl px-8 pt-8 pb-2 flex flex-col gap-4">
         <div className="flex items-center gap-4">
           <div className="font-semibold text-lg">Arquivos - Incêndio</div>
           <Button variant="outline">
