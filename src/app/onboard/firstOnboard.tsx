@@ -30,7 +30,7 @@ export default function FirstOnboard() {
 
       <Button
         variant={"ghost"}
-        className="hover:text-textGray hover:bg-transparent active:text-primaryGray text-textGray absolute bottom-2 left-9 animate__animated animate__fadeIn animate__delay-4s"
+        className="hover:text-primaryGray hover:bg-transparent active:text-textGray text-primaryGray absolute bottom-2 left-9 animate__animated animate__fadeIn animate__delay-5s"
       >
         Skip
       </Button>
