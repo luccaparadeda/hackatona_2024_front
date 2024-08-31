@@ -6,7 +6,9 @@ import DropdownContextMenu from "@/components/DropdownContextMenu";
 import { FileUpload } from "@/components/FileUpload";
 import Modal from "@/components/Modal";
 import { useAuth } from "@/hooks/useAuth";
-import { Fragment, useState } from "react";
+import api from "@/utils/api";
+import { Fragment, useEffect, useState } from "react";
+import { Category, getCategoryFrontInfo } from "../chatoptions/mocksContent";
 
 const fileMocks = [
   { name: "Guia de Incêndio" },
@@ -22,6 +24,8 @@ export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { signOut } = useAuth();
 
+  const [categoriesList, setCategoriesList] = useState<Category[]>([]);
+
   async function trySignOut(): Promise<void> {
     await signOut();
   }
@@ -34,13 +38,34 @@ export default function Dashboard() {
     setIsModalOpen(false);
   };
 
+  async function getCategories() {
+    const response = await api.get("/category");
+    localStorage.setItem("categoriesDashboard", JSON.stringify(response.data));
+    setCategoriesList(
+      response.data.map(
+        (category: {
+          name: string;
+          description: string;
+          prompts: string[];
+        }) => ({
+          ...category,
+          ...getCategoryFrontInfo(category.name),
+        }),
+      ),
+    );
+  }
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+
   return (
     <div className="h-full w-full overflow-y-auto p-6">
       <div className="justify-between flex">
         <span className="font-semibold text-4xl">Dashboard</span>
         <DropdownContextMenu
           options={[{ label: "Fazer Logout", onClick: () => trySignOut() }]}
-        >
+        > 
           <div className="text-sm font-semibold flex gap-2 items-center">
             example@gmail.com
             <ChevronDown />
@@ -56,13 +81,13 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="flex gap-4 overflow-x-auto">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+          {categoriesList.map((item, index) => (
             <CategoryBox
-              key={i}
-              bgColor="#ff0000"
-              icon="🔥"
-              iconBgColor="#aa0000"
-              quantity={2}
+              key={index}
+              bgColor={item.color}
+              icon={item.emoji}
+              iconBgColor={`${item.color}+10`}
+              quantity={6 + index}
               title="Teste123"
             />
           ))}
