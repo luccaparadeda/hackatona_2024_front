@@ -21,6 +21,7 @@ export default function Chatbot() {
     null,
   );
   const [history, setHistory] = useState<string>();
+  const divRef = useRef(null);
 
   useEffect(() => {
     const list = localStorage.getItem("categories");
@@ -38,33 +39,35 @@ export default function Chatbot() {
     );
   }, []);
 
-  const onSubmit = async () => {
-    if (!inputValue) {
+  async function onSubmit(readyText?: string) {
+    const userPrompt = readyText || inputValue;
+    if (!userPrompt) {
       return;
     }
 
     setInputValue("");
-
-    setMessages([...messages, { fromUser: true, text: inputValue }]);
+    messages.push({ fromUser: true, text: userPrompt });
+    setMessages([...messages]);
     await api
       .post("/ollama-chat", {
         history,
-        prompt: inputValue,
+        prompt: userPrompt,
         chat_category: "chuvas_intensas",
       })
       .then((response) => {
-        setHistory(`${history}, User: ${inputValue}, Model: ${response.data}`);
-        setMessages([
-          ...messages,
-          { fromUser: true, text: inputValue },
-          { fromUser: false, text: response.data },
-        ]);
+        setHistory(`User: ${userPrompt}, Model: ${response.data}`);
+        setMessages([...messages, { fromUser: false, text: response.data }]);
       });
-  };
+  }
+
+  useEffect(() => {
+    const childNodes = (divRef as any)?.current?.childNodes;
+    childNodes[childNodes.length - 1].scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
     <div className="flex flex-col gap-4 h-full relative overflow-scroll">
-      <div className="p-2 flex flex-col gap-1 mb-40">
+      <div ref={divRef} className="p-2 flex flex-col gap-1 mb-40">
         {messages.map((message, i) => (
           <ChatBox key={i} fromUser={message.fromUser}>
             <ReactMarkdown>{message.text}</ReactMarkdown>
@@ -81,7 +84,13 @@ export default function Chatbot() {
                 i === selectedCategory?.prompts.length - 1 && "mr-2",
               ].join(" ")}
             >
-              <OptionsCard key={i} text={prompt} onClick={() => {}} />
+              <OptionsCard
+                key={i}
+                text={prompt}
+                onClick={() => {
+                  onSubmit(prompt);
+                }}
+              />
             </div>
           ))}
         </div>
@@ -98,7 +107,7 @@ export default function Chatbot() {
           >
             <IoIosSend
               className="text-white z-10 cursor-pointer w-8 h-8"
-              onClick={onSubmit}
+              onClick={() => onSubmit()}
             />
           </div>
         </div>
