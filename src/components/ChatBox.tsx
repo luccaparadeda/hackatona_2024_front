@@ -1,7 +1,6 @@
 import BrainIcon from "@/assets/BrainIcon";
 import UserIcon from "@/assets/UserIcon";
-import { Fragment } from "react";
-
+import ReactMarkdown from "react-markdown";
 export default function ChatBox({
   children,
   fromUser,

@@ -4,37 +4,23 @@ import { Category } from "@/app/chatoptions/mocksContent";
 import ChatBox from "@/components/ChatBox";
 import { Input } from "@/components/ui/input";
 import OptionsCard from "@/components/ui/optionsCard";
+import api from "@/utils/api";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { IoIosSend } from "react-icons/io";
-
-const options = [
-  { id: 1, label: "Fumaça", value: "Mais informações" },
-  { id: 2, label: "Combate à incêndio", value: "Mais informações" },
-  { id: 3, label: "Solicitar ajuda", value: "Mais informações" },
-  { id: 3, label: "Solicitar ajuda", value: "Mais informações" },
-  { id: 3, label: "Solicitar ajuda", value: "Mais informações" },
-];
-
-const baseMessages = [
-  {
-    fromUser: true,
-    text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Magni possimus repudiandae aperiam, minima deleniti fugiat quam vero facere ea nostrum qui exercitationem soluta impedit sapiente perferendis adipisci deserunt delectus suscipit.",
-  },
-  {
-    fromUser: false,
-    text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Magni possimus repudiandae aperiam, minima deleniti fugiat quam vero facere ea nostrum qui exercitationem soluta impedit sapiente perferendis adipisci deserunt delectus suscipit.",
-  },
-];
-const chatMessagesMock = [...baseMessages, ...baseMessages, ...baseMessages];
+import ReactMarkdown from "react-markdown";
 
 export default function Chatbot() {
   const params = useParams<{ categoryName: string }>();
   const router = useRouter();
   const [inputValue, setInputValue] = useState("");
+  const [messages, setMessages] = useState<
+    { fromUser: boolean; text: string }[]
+  >([{ fromUser: false, text: "Olá, como posso te ajudar?" }]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null,
   );
+  const [history, setHistory] = useState<string>();
 
   useEffect(() => {
     const list = localStorage.getItem("categories");
@@ -51,12 +37,37 @@ export default function Chatbot() {
       })[0],
     );
   }, []);
+
+  const onSubmit = async () => {
+    if (!inputValue) {
+      return;
+    }
+
+    setInputValue("");
+
+    setMessages([...messages, { fromUser: true, text: inputValue }]);
+    await api
+      .post("/ollama-chat", {
+        history,
+        prompt: inputValue,
+        chat_category: "chuvas_intensas",
+      })
+      .then((response) => {
+        setHistory(`${history}, User: ${inputValue}, Model: ${response.data}`);
+        setMessages([
+          ...messages,
+          { fromUser: true, text: inputValue },
+          { fromUser: false, text: response.data },
+        ]);
+      });
+  };
+
   return (
     <div className="flex flex-col gap-4 h-full relative overflow-scroll">
       <div className="p-2 flex flex-col gap-1 mb-40">
-        {chatMessagesMock.map((message, i) => (
+        {messages.map((message, i) => (
           <ChatBox key={i} fromUser={message.fromUser}>
-            <div className="text-justify">{message.text}</div>
+            <ReactMarkdown>{message.text}</ReactMarkdown>
           </ChatBox>
         ))}
       </div>
@@ -67,7 +78,7 @@ export default function Chatbot() {
               key={i}
               className={[
                 i === 0 && "ml-2",
-                i === options.length - 1 && "mr-2",
+                i === selectedCategory?.prompts.length - 1 && "mr-2",
               ].join(" ")}
             >
               <OptionsCard key={i} text={prompt} onClick={() => {}} />
@@ -87,7 +98,7 @@ export default function Chatbot() {
           >
             <IoIosSend
               className="text-white z-10 cursor-pointer w-8 h-8"
-              onClick={() => console.log("Submit")}
+              onClick={onSubmit}
             />
           </div>
         </div>
