@@ -61,7 +61,7 @@ export default function Chatbot() {
       .post("/ollama-chat", {
         history,
         prompt: userPrompt,
-        chat_category: "chuvas_intensas",
+        chat_category: selectedCategory?.name,
       })
       .then((response) => {
         setHistory(`User: ${userPrompt}, Model: ${response.data}`);
