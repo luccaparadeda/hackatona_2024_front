@@ -1,11 +1,11 @@
 "use client";
 
 import { Category } from "@/app/chatoptions/mocksContent";
-import Logo from "@/assets/Logo";
 import SmallLogo from "@/assets/SmalLogo";
 import ChatBox from "@/components/ChatBox";
 import { Input } from "@/components/ui/input";
 import OptionsCard from "@/components/ui/optionsCard";
+import { Skeleton } from "@/components/ui/skeleton";
 import api from "@/utils/api";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -23,6 +23,7 @@ export default function Chatbot() {
     null,
   );
   const [history, setHistory] = useState<string>();
+  const [isLoading, setIsLoading] = useState(false);
   const divRef = useRef(null);
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function Chatbot() {
     if (!userPrompt) {
       return;
     }
-
+    setIsLoading(true);
     setInputValue("");
     messages.push({ fromUser: true, text: userPrompt });
     setMessages([...messages]);
@@ -58,6 +59,7 @@ export default function Chatbot() {
       })
       .then((response) => {
         setHistory(`User: ${userPrompt}, Model: ${response.data}`);
+        setIsLoading(false);
         setMessages([...messages, { fromUser: false, text: response.data }]);
       });
   }
@@ -79,6 +81,32 @@ export default function Chatbot() {
             <ReactMarkdown>{message.text}</ReactMarkdown>
           </ChatBox>
         ))}
+        {isLoading && (
+          <Skeleton className="w-4/5 h-52 p-2 gap-1 flex-col grid grid-cols-3">
+            <Skeleton className="ml-10 col-span-2" />
+            <Skeleton />
+            <Skeleton />
+            <Skeleton className="col-span-2 " />
+            <Skeleton />
+            <Skeleton />
+            <Skeleton />
+            <Skeleton className="col-span-2 " />
+            <Skeleton />
+            <Skeleton />
+            <Skeleton className="col-span-2 " />
+            <Skeleton className="ml-10" />
+            <Skeleton />
+            <Skeleton />
+            <Skeleton className="col-span-2 " />
+            <Skeleton />
+            <Skeleton />
+            <Skeleton className="col-span-2 " />
+            <Skeleton />
+            <Skeleton />
+            <Skeleton className="ml-10 col-span-2 " />
+            <Skeleton />
+          </Skeleton>
+        )}
       </div>
       <div className="fixed bottom-0 w-full backdrop-blur-sm">
         <div className="overflow-x-auto overflow-y-hidden flex gap-2.5 w-full mb-2">
