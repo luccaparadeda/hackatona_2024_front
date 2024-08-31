@@ -67,7 +67,7 @@ export default function Dashboard() {
           options={[{ label: "Fazer Logout", onClick: () => trySignOut() }]}
         >
           <div className="text-sm font-semibold flex gap-2 items-center">
-            example@gmail.com
+            admin@gmail.com
             <ChevronDown />
           </div>
           <div className="text-sm">Admin</div>
