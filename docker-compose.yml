@@ -1,6 +1,6 @@
 services:
   frontend:
-    image: ${{ secrets.DOCKER_USERNAME }}/hackatona_2024_frontend:production
+    image: luccatisserparadeda/hackatona_2024_frontend:production
     ports:
       - "3000:3000"
     deploy:
