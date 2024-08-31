@@ -4,6 +4,8 @@ interface CategoryBoxProps {
   quantity: number;
   iconBgColor: string;
   bgColor: string;
+  className?: string;
+  onClick?: () => void;
 }
 
 export default function CategoryBox({
@@ -12,11 +14,14 @@ export default function CategoryBox({
   quantity,
   iconBgColor,
   bgColor,
+  className,
+  onClick,
 }: CategoryBoxProps) {
   return (
     <div
-      className="flex flex-col items-start p-4 rounded-2xl transition-colors duration-300 min-w-44 min-h-44"
+      className={`flex flex-col items-start p-4 rounded-2xl transition-colors duration-300 min-w-44 min-h-44 ${className}`}
       style={{ backgroundColor: bgColor }}
+      onClick={onClick}
     >
       <div
         className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full mb-4"

@@ -82,16 +82,16 @@ export default function Dashboard() {
         </div>
         <div className="flex gap-4 overflow-x-auto">
           {categoriesList.map((item, index) => (
-            <Fragment>
-              <CategoryBox
-                key={index}
-                iconBgColor={item.color}
-                icon={item.emoji}
-                bgColor={`${item.color}33`}
-                quantity={6 + index}
-                title={item.exibitionName}
-              />
-            </Fragment>
+            <CategoryBox
+              className="cursor-pointer hover:"
+              onClick={() => console.log("clicked")}
+              key={index}
+              iconBgColor={item.color}
+              icon={item.emoji}
+              bgColor={`${item.color}33`}
+              quantity={6 + index}
+              title={item.exibitionName}
+            />
           ))}
         </div>
       </div>
