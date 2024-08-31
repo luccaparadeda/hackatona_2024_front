@@ -1,10 +1,9 @@
 "use client";
-import ImportIcon from "@/assets/ImportIcon";
 import TrashIcon from "@/assets/TrashIcon";
 import CategoryBox from "@/components/CategoryBox";
 import ChevronDown from "@/components/ChevronDown";
 import DropdownContextMenu from "@/components/DropdownContextMenu";
-import { Button } from "@/components/ui/button";
+import { FileUpload } from "@/components/FileUpload";
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
 
@@ -50,7 +49,7 @@ export default function Dashboard() {
               icon="🔥"
               iconBgColor="#aa0000"
               quantity={2}
-              title=""
+              title="Teste123"
             />
           ))}
         </div>
@@ -58,10 +57,7 @@ export default function Dashboard() {
       <div className="shadow-lg rounded-3xl px-8 pt-8 pb-2 flex flex-col gap-4">
         <div className="flex items-center gap-4">
           <div className="font-semibold text-lg">Arquivos - Incêndio</div>
-          <Button variant="outline">
-            <ImportIcon />
-            Importar
-          </Button>
+          <FileUpload />
         </div>
         <div className="grid grid-cols-[1fr_10fr_1fr]">
           <div className="text-gray-400 py-3">#</div>
