@@ -1,0 +1,9 @@
+services:
+  frontend:
+    image: ${{ secrets.DOCKER_USERNAME }}/hackatona_2024_frontend:production
+    ports:
+      - "3000:3000"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
