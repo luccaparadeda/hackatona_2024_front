@@ -1,6 +1,4 @@
-import React from "react";
-
-interface CategoriesPorps {
+interface CategoryBoxProps {
   icon: string;
   title: string;
   quantity: number;
@@ -8,13 +6,13 @@ interface CategoriesPorps {
   bgColor: string;
 }
 
-const CategoriesBox: React.FC<CategoriesPorps> = ({
+export default function CategoryBox({
   icon,
   title,
   quantity,
   iconBgColor,
   bgColor,
-}) => {
+}: CategoryBoxProps) {
   return (
     <div
       className="flex flex-col items-start p-4 rounded-2xl transition-colors duration-300 min-w-44 min-h-44"
@@ -36,6 +34,4 @@ const CategoriesBox: React.FC<CategoriesPorps> = ({
       </div>
     </div>
   );
-};
-
-export default CategoriesBox;
+}

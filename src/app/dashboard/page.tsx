@@ -1,10 +1,10 @@
 "use client";
 import ImportIcon from "@/assets/ImportIcon";
 import TrashIcon from "@/assets/TrashIcon";
+import CategoryBox from "@/components/CategoryBox";
 import ChevronDown from "@/components/ChevronDown";
 import DropdownContextMenu from "@/components/DropdownContextMenu";
 import { Button } from "@/components/ui/button";
-import CategoriesBox from "@/components/ui/categoriesBox";
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
 
@@ -45,7 +45,7 @@ export default function Dashboard() {
         </div>
         <div className="flex gap-4 overflow-x-auto">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
-            <CategoriesBox
+            <CategoryBox
               bgColor="#ff0000"
               icon="🔥"
               iconBgColor="#aa0000"
