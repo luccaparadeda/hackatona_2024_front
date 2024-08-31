@@ -10,44 +10,16 @@ import api from "@/utils/api";
 import { Fragment, useEffect, useState } from "react";
 import { Category, getCategoryFrontInfo } from "../chatoptions/mocksContent";
 
-function getFiles(name: string) {
-  if (name === "incendio") {
-    return [
-      { name: "Guia de Incêndio 1" },
-      { name: "Guia de Incêndio 2" },
-      { name: "Guia de Incêndio 3" },
-      { name: "Guia de Incêndio 4" },
-    ];
-  } else {
-    return [
-      { name: "Guia de Chuvas Intensas 1" },
-      { name: "Guia de Chuvas Intensas 2" },
-      { name: "Guia de Chuvas Intensas 3" },
-    ];
-  }
-}
-
 export default function Dashboard() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { signOut } = useAuth();
+  const [categoriesList, setCategoriesList] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null,
   );
-
-  const { signOut } = useAuth();
-
-  const [categoriesList, setCategoriesList] = useState<Category[]>([]);
-
-  async function trySignOut(): Promise<void> {
-    await signOut();
-  }
-
-  const handleDeleteClick = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleConfirmDelete = () => {
-    setIsModalOpen(false);
-  };
+  const [files, setFiles] = useState<string[]>([]);
+  const [selectedFileToDelete, setSelectedFileToDelete] = useState<
+    string | null
+  >(null);
 
   async function getCategories() {
     const response = await api.get("/category");
@@ -62,16 +34,38 @@ export default function Dashboard() {
     setCategoriesList(categories);
   }
 
+  async function getFiles(categoryName: string) {
+    const response = await api.post("/file/list", {
+      category: categoryName,
+    });
+    setFiles(response.data);
+  }
+
+  async function deleteFile(fileName: string, categoryName: string) {
+    const response = await api.post("/file/delete", {
+      category: categoryName,
+      fileName: fileName,
+    });
+    console.log(response);
+    getFiles(categoryName);
+  }
+
   useEffect(() => {
     getCategories();
   }, []);
+
+  useEffect(() => {
+    if (selectedCategory) {
+      getFiles(selectedCategory.name);
+    }
+  }, [selectedCategory]);
 
   return (
     <div className="h-full w-full overflow-y-auto p-6">
       <div className="justify-between flex">
         <span className="font-semibold text-4xl">Dashboard</span>
         <DropdownContextMenu
-          options={[{ label: "Fazer Logout", onClick: () => trySignOut() }]}
+          options={[{ label: "Fazer Logout", onClick: () => signOut() }]}
         >
           <div className="text-sm font-semibold flex gap-2 items-center">
             admin@gmail.com
@@ -108,21 +102,21 @@ export default function Dashboard() {
             <div className="font-semibold text-lg">
               Arquivos - {selectedCategory.exibitionName}
             </div>
-            <FileUpload />
+            <FileUpload categoryName={selectedCategory.name} />
           </div>
           <div className="grid grid-cols-[1fr_10fr_1fr]">
             <div className="text-gray-400 py-3">#</div>
             <div className="text-gray-400 py-3">Nome</div>
             <div className="text-gray-400 text-center py-3">Deletar</div>
-            {getFiles(selectedCategory.name).map((file, i) => (
+            {files.map((file, i) => (
               <Fragment key={i}>
                 <div className="border-t border-gray-300 py-3">
                   {(i + 1).toString().padStart(2, "0")}
                 </div>
-                <div className="border-t border-gray-300 py-3">{file.name}</div>
+                <div className="border-t border-gray-300 py-3">{file}</div>
                 <div
                   className="flex justify-center border-t border-gray-300 py-3 cursor-pointer"
-                  onClick={() => handleDeleteClick()}
+                  onClick={() => setSelectedFileToDelete(file)}
                 >
                   <TrashIcon />
                 </div>
@@ -132,9 +126,12 @@ export default function Dashboard() {
         </div>
       )}
       <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleConfirmDelete}
+        isOpen={selectedFileToDelete !== null}
+        onClose={() => setSelectedFileToDelete(null)}
+        onSubmit={() => {
+          deleteFile(selectedFileToDelete!, selectedCategory!.name);
+          setSelectedFileToDelete(null);
+        }}
       />
     </div>
   );

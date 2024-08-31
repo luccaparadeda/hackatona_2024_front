@@ -1,9 +1,9 @@
 import ImportIcon from "@/assets/ImportIcon";
 import React, { useRef } from "react";
 import { Button } from "./ui/button";
-// import api from "@/utils/api";
+import api from "@/utils/api";
 
-export function FileUpload() {
+export function FileUpload({ categoryName }: { categoryName: string }) {
   const fileInputRef = useRef(null);
 
   function handleButtonClick() {
@@ -15,10 +15,10 @@ export function FileUpload() {
     if (file) {
       alert(`Selected file: ${file.name}`);
 
-      // api.postForm(`file/upload`, {
-      //   file: file,
-      //   category: "incendio",
-      // });
+      api.postForm(`file/upload`, {
+        file: file,
+        category: categoryName,
+      });
     }
   }
 
