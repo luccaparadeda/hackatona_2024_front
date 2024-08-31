@@ -1,6 +1,7 @@
 import ImportIcon from "@/assets/ImportIcon";
 import React, { useRef } from "react";
 import { Button } from "./ui/button";
+// import api from "@/utils/api";
 
 export function FileUpload() {
   const fileInputRef = useRef(null);
@@ -13,6 +14,11 @@ export function FileUpload() {
     const file = event.target.files[0];
     if (file) {
       alert(`Selected file: ${file.name}`);
+
+      // api.postForm(`file/upload`, {
+      //   file: file,
+      //   category: "incendio",
+      // });
     }
   }
 

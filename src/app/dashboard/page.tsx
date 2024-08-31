@@ -5,7 +5,7 @@ import ChevronDown from "@/components/ChevronDown";
 import DropdownContextMenu from "@/components/DropdownContextMenu";
 import { FileUpload } from "@/components/FileUpload";
 import Modal from "@/components/Modal";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 import { Fragment, useState } from "react";
 
 const fileMocks = [
@@ -20,7 +20,11 @@ const fileMocks = [
 
 export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const router = useRouter();
+  const { signOut } = useAuth();
+
+  async function trySignOut(): Promise<void> {
+    await signOut();
+  }
 
   const handleDeleteClick = () => {
     setIsModalOpen(true);
@@ -35,9 +39,7 @@ export default function Dashboard() {
       <div className="justify-between flex">
         <span className="font-semibold text-4xl">Dashboard</span>
         <DropdownContextMenu
-          options={[
-            { label: "Fazer Logout", onClick: () => router.replace("/login") },
-          ]}
+          options={[{ label: "Fazer Logout", onClick: () => trySignOut() }]}
         >
           <div className="text-sm font-semibold flex gap-2 items-center">
             example@gmail.com

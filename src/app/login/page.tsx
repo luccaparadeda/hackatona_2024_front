@@ -1,14 +1,15 @@
 "use client";
 import Logo from "@/assets/Logo";
-import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Login() {
-  const router = useRouter();
+  const { signIn } = useAuth();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -34,7 +35,9 @@ export default function Login() {
           <Input
             placeholder="Digite seu email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={({ target }) => {
+              setEmail(target.value);
+            }}
             className="bg-[#f9f9f9] border-0  rounded-md text-black h-12"
           />
         </div>
@@ -44,15 +47,17 @@ export default function Login() {
             type="password"
             placeholder="Digite sua senha"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={({ target }) => {
+              setPassword(target.value);
+            }}
             className="bg-[#f9f9f9] border-0 rounded-md text-black h-12"
           />
         </div>
         <Button
           className="mx-32 mt-10 h-10 bg-primaryGreen"
-          onClick={() => router.push("dashboard")}
+          onClick={() => signIn({ email, password })}
         >
-          ENTRAR
+          {isLoading ? "Carregando..." : "ENTRAR"}
         </Button>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
+import Providers from "./Providers";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -17,9 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={montserrat.className}>
-        <div className="flex flex-col w-dvw h-dvh overflow-hidden">
-          {children}
-        </div>
+        <Providers>
+          <div className="flex flex-col w-dvw h-dvh overflow-hidden">
+            {children}
+          </div>
+        </Providers>
       </body>
     </html>
   );
