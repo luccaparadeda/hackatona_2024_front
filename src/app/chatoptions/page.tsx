@@ -18,6 +18,7 @@ export default function chatOptions() {
 
   async function getCategories() {
     const response = await api.get("/category");
+    localStorage.setItem("categories", JSON.stringify(response.data));
     setCategoriesList(
       response.data.map(
         (category: {
@@ -60,17 +61,19 @@ export default function chatOptions() {
           />
         </Button>
       ))}
-      <Button
-        className={`text-white mt-2 mx-4 animate__fadeIn animate__animated ${
-          selectedIndex === null
-            ? "bg-primaryGray hover:bg-primaryGray active:bg-primaryDarkGray"
-            : "bg-primaryGreen hover:bg-primaryGreen active:bg-primaryDarkGreen"
-        }`}
-        variant={"ghost"}
-        onClick={() => router.push("chatbot")}
-      >
-        {selectedIndex === null ? "PULAR" : "CONFIRMAR"}
-      </Button>
+      {selectedIndex !== null && (
+        <Button
+          className={
+            "text-white mt-2 mx-4 animate__fadeIn animate__animated bg-primaryGreen hover:bg-primaryGreen active:bg-primaryDarkGreen"
+          }
+          variant={"ghost"}
+          onClick={() =>
+            router.push(`chatbot/${categoriesList[selectedIndex].name}`)
+          }
+        >
+          {"CONFIRMAR"}
+        </Button>
+      )}
     </div>
   );
 }
