@@ -1,8 +1,10 @@
 "use client";
 
+import { Category } from "@/app/chatoptions/mocksContent";
 import ChatBox from "@/components/ChatBox";
 import { Input } from "@/components/ui/input";
 import OptionsCard from "@/components/ui/optionsCard";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { IoIosSend } from "react-icons/io";
 
@@ -27,11 +29,31 @@ const baseMessages = [
 const chatMessagesMock = [...baseMessages, ...baseMessages, ...baseMessages];
 
 export default function Chatbot() {
+  const params = useParams<{ categoryName: string }>();
+  const router = useRouter();
   const [inputValue, setInputValue] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null,
+  );
 
+  useEffect(() => {
+    const list = localStorage.getItem("categories");
+    if (!list) {
+      router.replace("/chatoptions");
+      return;
+    }
+
+    setSelectedCategory(
+      JSON.parse(list).filter((category: { name: string }) => {
+        if (category.name === params.categoryName) {
+          return category;
+        }
+      })[0],
+    );
+  }, []);
   return (
     <div className="flex flex-col gap-4 h-full relative overflow-scroll">
-      <div className="p-2 flex flex-col gap-1 mb-32">
+      <div className="p-2 flex flex-col gap-1 mb-40">
         {chatMessagesMock.map((message, i) => (
           <ChatBox key={i} fromUser={message.fromUser}>
             <div className="text-justify">{message.text}</div>
@@ -40,7 +62,7 @@ export default function Chatbot() {
       </div>
       <div className="fixed bottom-0 w-full backdrop-blur-sm">
         <div className="overflow-x-auto overflow-y-hidden flex gap-2.5 w-full mb-2">
-          {options.map((option, i) => (
+          {selectedCategory?.prompts.map((prompt, i) => (
             <div
               key={i}
               className={[
@@ -48,12 +70,7 @@ export default function Chatbot() {
                 i === options.length - 1 && "mr-2",
               ].join(" ")}
             >
-              <OptionsCard
-                key={option.id}
-                option={option.label}
-                text={option.value}
-                onClick={() => console.log(option.label)}
-              />
+              <OptionsCard key={i} text={prompt} onClick={() => {}} />
             </div>
           ))}
         </div>
