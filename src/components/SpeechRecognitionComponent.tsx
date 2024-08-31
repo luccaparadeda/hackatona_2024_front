@@ -1,13 +1,27 @@
-import React, { useState, useEffect } from "react";
-
+import React, {
+  useState,
+  useEffect,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
 import Image from "next/image";
 
-const SpeechRecognitionComponent: React.FC = () => {
+interface RecognitionProps {
+  strDescFunc: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export interface SpeechRecognitionHandle {
+  stopListening: () => void;
+}
+
+const SpeechRecognitionComponent = forwardRef<
+  SpeechRecognitionHandle,
+  RecognitionProps
+>(({ strDescFunc }, ref) => {
   const [recognition, setRecognition] = useState<SpeechRecognition | null>(
     null,
   );
   const [isListening, setIsListening] = useState(false);
-  const [transcript, setTranscript] = useState("");
 
   useEffect(() => {
     if (!("webkitSpeechRecognition" in window)) {
@@ -41,7 +55,7 @@ const SpeechRecognitionComponent: React.FC = () => {
         }
       }
 
-      setTranscript(finalTranscript || interimTranscript);
+      strDescFunc(finalTranscript || interimTranscript);
     };
 
     recognition.onerror = (event) => {
@@ -61,7 +75,7 @@ const SpeechRecognitionComponent: React.FC = () => {
       recognition.onerror = null;
       recognition.onend = null;
     };
-  }, []);
+  }, [strDescFunc]);
 
   const startListening = () => {
     if (recognition) {
@@ -75,29 +89,36 @@ const SpeechRecognitionComponent: React.FC = () => {
     }
   };
 
+  // Expose the stopListening function to parent components
+  useImperativeHandle(ref, () => ({
+    stopListening,
+  }));
+
   return (
     <div>
-      {!isListening && (<button onClick={startListening}>
-        <Image
-          src="/micIcon.svg"
-          alt="microfoneIcon"
-          width={32}
-          height={32}
-        />
-      </button>)}
-      
-      {isListening &&(<button onClick={stopListening}>
-        <Image
-          src="/micOnIcon.svg"
-          alt="microfoneIcon On"
-          width={32}
-          height={32}
-        />
-      </button>)}
+      {!isListening && (
+        <button onClick={startListening}>
+          <Image
+            src="/micIcon.svg"
+            alt="microfoneIcon"
+            width={32}
+            height={32}
+          />
+        </button>
+      )}
 
-      {transcript}
+      {isListening && (
+        <button onClick={stopListening}>
+          <Image
+            src="/micOnIcon.svg"
+            alt="microfoneIcon On"
+            width={32}
+            height={32}
+          />
+        </button>
+      )}
     </div>
   );
-};
+});
 
 export default SpeechRecognitionComponent;

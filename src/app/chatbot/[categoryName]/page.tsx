@@ -3,6 +3,9 @@
 import { Category } from "@/app/chatoptions/mocksContent";
 import SmallLogo from "@/assets/SmalLogo";
 import ChatBox from "@/components/ChatBox";
+import SpeechRecognitionComponent, {
+  SpeechRecognitionHandle,
+} from "@/components/SpeechRecognitionComponent";
 import { Input } from "@/components/ui/input";
 import OptionsCard from "@/components/ui/optionsCard";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,6 +28,8 @@ export default function Chatbot() {
   const [history, setHistory] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
   const divRef = useRef(null);
+
+  const speechRecognitionRef = useRef<SpeechRecognitionHandle>(null);
 
   useEffect(() => {
     const list = localStorage.getItem("categories");
@@ -49,6 +54,7 @@ export default function Chatbot() {
     }
     setIsLoading(true);
     setInputValue("");
+    speechRecognitionRef.current?.stopListening();
     messages.push({ fromUser: true, text: userPrompt });
     setMessages([...messages]);
     await api
@@ -62,6 +68,8 @@ export default function Chatbot() {
         setIsLoading(false);
         setMessages([...messages, { fromUser: false, text: response.data }]);
       });
+
+    setInputValue("");
   }
 
   useEffect(() => {
@@ -129,6 +137,10 @@ export default function Chatbot() {
           ))}
         </div>
         <div className="mb-1 mx-2 flex gap-1">
+          <SpeechRecognitionComponent
+            strDescFunc={setInputValue}
+            ref={speechRecognitionRef}
+          />
           <Input
             placeholder="Digite sua mensagem..."
             value={inputValue}
