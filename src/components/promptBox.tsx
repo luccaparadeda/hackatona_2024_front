@@ -6,20 +6,16 @@ interface BoxComponentProps {
   description: string;
   isSelected: boolean;
   iconBgColor: string;
-  width: string;
-  height: string;
-  padding: string;
 }
 
-const BoxComponent: React.FC<BoxComponentProps> = ({ icon, title, description, isSelected, iconBgColor, width, height, padding }) => {
+const BoxComponent: React.FC<BoxComponentProps> = ({ icon, title, description, isSelected, iconBgColor }) => {
   return (
-    <div  style={{ width, height, padding }}
+    <div 
     >
     <div
       className={`flex items-center p-4 border rounded-lg transition-colors duration-300 ${
         isSelected ? 'bg-white border-green-300' : 'bg-white border-gray-300'
       }`}
-      style={{ width, height }}
     >
       {/* Icon area */}
       <div
