@@ -33,9 +33,7 @@ export default function CategoryBox({
         <h3 className="text-lg font-semibold">{title}</h3>
       </div>
       <div>
-        <p className="text-sm font-light text-gray-700">
-          {quantity + " arquivo" + (quantity > 1 ? "s" : "")}
-        </p>
+        <p className="text-sm font-light text-gray-700">Ver arquivos</p>
       </div>
     </div>
   );

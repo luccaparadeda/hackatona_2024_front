@@ -30,6 +30,7 @@ export default function Dashboard() {
         ...getCategoryFrontInfo(category.name),
       }),
     );
+  
     setSelectedCategory(categories[0]);
     setCategoriesList(categories);
   }
