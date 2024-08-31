@@ -11,7 +11,7 @@ export default function ChatBox({
 }) {
   return (
     <div
-      className={`flex w-4/5 bg-red-500 rounded-md p-1 text-xs
+      className={`flex w-4/5 rounded-md p-1 text-xs
         ${
           fromUser
             ? "ml-auto bg-chatTextGray "
