@@ -1,6 +1,8 @@
 "use client";
 
 import { Category } from "@/app/chatoptions/mocksContent";
+import Logo from "@/assets/Logo";
+import SmallLogo from "@/assets/SmalLogo";
 import ChatBox from "@/components/ChatBox";
 import { Input } from "@/components/ui/input";
 import OptionsCard from "@/components/ui/optionsCard";
@@ -67,7 +69,11 @@ export default function Chatbot() {
 
   return (
     <div className="flex flex-col gap-4 h-full relative overflow-scroll">
-      <div ref={divRef} className="p-2 flex flex-col gap-1 mb-40">
+      <div className="fixed top-0 w-full shadow-lg bg-white font-semibold flex  items-center justify-center gap-4 py-2">
+        <SmallLogo />
+        Alerta Amigos
+      </div>
+      <div ref={divRef} className="p-2 flex flex-col gap-1 mb-40 mt-14">
         {messages.map((message, i) => (
           <ChatBox key={i} fromUser={message.fromUser}>
             <ReactMarkdown>{message.text}</ReactMarkdown>
