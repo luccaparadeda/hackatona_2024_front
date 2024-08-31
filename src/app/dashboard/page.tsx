@@ -4,8 +4,9 @@ import CategoryBox from "@/components/CategoryBox";
 import ChevronDown from "@/components/ChevronDown";
 import DropdownContextMenu from "@/components/DropdownContextMenu";
 import { FileUpload } from "@/components/FileUpload";
+import Modal from "@/components/Modal";
 import { useRouter } from "next/navigation";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 
 const fileMocks = [
   { name: "Guia de Incêndio" },
@@ -16,8 +17,18 @@ const fileMocks = [
   { name: "Guia de Incêndio" },
   { name: "Guia de Incêndio" },
 ];
+
 export default function Dashboard() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
+
+  const handleDeleteClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <div className="h-full w-full overflow-y-auto p-6">
@@ -45,6 +56,7 @@ export default function Dashboard() {
         <div className="flex gap-4 overflow-x-auto">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
             <CategoryBox
+              key={i}
               bgColor="#ff0000"
               icon="🔥"
               iconBgColor="#aa0000"
@@ -64,18 +76,26 @@ export default function Dashboard() {
           <div className="text-gray-400 py-3">Nome</div>
           <div className="text-gray-400 text-center py-3">Deletar</div>
           {fileMocks.map((file, i) => (
-            <Fragment>
+            <Fragment key={i}>
               <div className="border-t border-gray-300 py-3">
                 {i.toString().padStart(2, "0")}
               </div>
               <div className="border-t border-gray-300 py-3">{file.name}</div>
-              <div className="flex justify-center border-t border-gray-300 py-3">
+              <div
+                className="flex justify-center border-t border-gray-300 py-3 cursor-pointer"
+                onClick={() => handleDeleteClick()}
+              >
                 <TrashIcon />
               </div>
             </Fragment>
           ))}
         </div>
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleConfirmDelete}
+      />
     </div>
   );
 }
