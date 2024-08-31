@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={montserrat.className}>
+      <body className={montserrat.className + " overflow-hidden"}>
         <Providers>
           <div className="flex flex-col w-dvw h-dvh overflow-hidden">
             {children}
