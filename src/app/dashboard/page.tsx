@@ -65,7 +65,7 @@ export default function Dashboard() {
         <span className="font-semibold text-4xl">Dashboard</span>
         <DropdownContextMenu
           options={[{ label: "Fazer Logout", onClick: () => trySignOut() }]}
-        > 
+        >
           <div className="text-sm font-semibold flex gap-2 items-center">
             example@gmail.com
             <ChevronDown />
@@ -82,14 +82,16 @@ export default function Dashboard() {
         </div>
         <div className="flex gap-4 overflow-x-auto">
           {categoriesList.map((item, index) => (
-            <CategoryBox
-              key={index}
-              bgColor={item.color}
-              icon={item.emoji}
-              iconBgColor={`${item.color}+10`}
-              quantity={6 + index}
-              title="Teste123"
-            />
+            <Fragment>
+              <CategoryBox
+                key={index}
+                iconBgColor={item.color}
+                icon={item.emoji}
+                bgColor={`${item.color}33`}
+                quantity={6 + index}
+                title={item.exibitionName}
+              />
+            </Fragment>
           ))}
         </div>
       </div>
