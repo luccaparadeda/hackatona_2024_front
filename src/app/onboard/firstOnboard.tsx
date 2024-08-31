@@ -1,8 +1,11 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import "animate.css";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function FirstOnboard() {
+  const router = useRouter();
   return (
     <div className="flex flex-col w-full h-full items-center justify-center text-center overflow-hidden">
       <div className="animate__animated animate__slideInLeft w-3/4 h-3/4 bg-[#F4F4FF] border-l-[20px] border-b-[20px] border-[#F4F4FF] rounded-xl">
@@ -22,7 +25,7 @@ export default function FirstOnboard() {
           </div>
         </div>
       </div>
-      <Button className="bg-primaryGreen hover:bg-primaryGreen active:bg-primaryDarkGreen absolute bottom-2 right-9 animate__animated animate__fadeIn animate__delay-4s">
+      <Button className="bg-primaryGreen hover:bg-primaryGreen active:bg-primaryDarkGreen absolute bottom-2 right-9 animate__animated animate__fadeIn animate__delay-4s"  onClick={() => router.push("chatoptions")}>
         Próximo
       </Button>
 

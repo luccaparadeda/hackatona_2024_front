@@ -23,6 +23,7 @@ const config: Config = {
         primaryGreen: "#00B140",
         primaryDarkGreen: "#007D2C",
         primaryGray: "#38403D",
+        primaryDarkGray: "#2C3230",
         secondaryGreen: "#52CA7D",
         chatGreen: "#D3F9C5",
         chatTextGreen: "#27B469",
