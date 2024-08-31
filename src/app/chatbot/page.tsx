@@ -51,7 +51,6 @@ export default function Chatbot() {
           >
             <IoIosSend
               className="text-white z-10 cursor-pointer w-8 h-8"
-              size={20}
               onClick={() => console.log("Submit")}
             />
           </div>
